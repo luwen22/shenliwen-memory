@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>解锁你和沈立文的大学四年</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #FAF7F2;
+            color: #4A3F35;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 首页 */
+        .home-container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .home-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            animation: float 3s ease infinite;
+        }
+
+        .home-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4A3F35;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .home-subtitle {
+            font-size: 15px;
+            color: #8B7355;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 18px;
+            border: 2px solid #E8DFD0;
+            border-radius: 16px;
+            background: #FFFDF9;
+            color: #4A3F35;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: #7BA7BC;
+            box-shadow: 0 0 0 4px rgba(123, 167, 188, 0.15);
+        }
+
+        .name-input::placeholder {
+            color: #D4C4A8;
+        }
+
+        .unlock-btn {
+            width: 100%;
+            padding: 16px 32px;
+            font-size: 17px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #7BA7BC, #5B8A72);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(91, 138, 114, 0.3);
+        }
+
+        .unlock-btn:active {
+            transform: scale(0.97);
+        }
+
+        .hint-text {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #D4C4A8;
+        }
+
+        /* 加载页 */
+        .loading-container {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #E8DFD0;
+            border-top-color: #7BA7BC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #8B7355;
+        }
+
+        /* 结果页 */
+        .result-container {
+            max-width: 450px;
+            width: 100%;
+            padding-bottom: 60px;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-top: 20px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #D4A574, #E07A5F);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            animation: pulse 2s ease infinite;
+        }
+
+        .result-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4A3F35;
+            margin-bottom: 8px;
+        }
+
+        .result-tagline {
+            font-size: 15px;
+            color: #8B7355;
+        }
+
+        .tag-card {
+            background: #FFFDF9;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tag-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #7BA7BC, #5B8A72, #D4A574);
+        }
+
+        .tag-label {
+            font-size: 13px;
+            color: #8B7355;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .tag-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #4A3F35;
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        .tag-desc {
+            font-size: 14px;
+            color: #8B7355;
+            line-height: 1.8;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4A3F35;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            font-size: 22px;
+        }
+
+        .achievements-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .achievement-card {
+            background: #FFFDF9;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .achievement-card:active {
+            transform: scale(0.98);
+        }
+
+        .achievement-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FAF7F2;
+            border-radius: 14px;
+        }
+
+        .achievement-content {
+            flex: 1;
+        }
+
+        .achievement-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #4A3F35;
+            margin-bottom: 6px;
+        }
+
+        .achievement-desc {
+            font-size: 13px;
+            color: #8B7355;
+            line-height: 1.6;
+        }
+
+        .achievement-date {
+            font-size: 12px;
+            color: #D4C4A8;
+            margin-top: 6px;
+        }
+
+        .word-cloud {
+            background: #FFFDF9;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .cloud-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .cloud-word {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cloud-word:nth-child(1) { background: #E8F4F8; color: #2C5F7C; }
+        .cloud-word:nth-child(2) { background: #FDF2E9; color: #B8703C; }
+        .cloud-word:nth-child(3) { background: #E9F5EC; color: #3D7A5A; }
+        .cloud-word:nth-child(4) { background: #F5EEF8; color: #7B5A8C; }
+        .cloud-word:nth-child(5) { background: #FEF9E7; color: #9A7B1A; }
+        .cloud-word:nth-child(6) { background: #FDEDEC; color: #A0504A; }
+        .cloud-word:nth-child(7) { background: #EBF5FB; color: #2E6B8A; }
+        .cloud-word:nth-child(8) { background: #F6F8E8; color: #6B7B3A; }
+
+        .cloud-word:active {
+            transform: scale(1.1);
+        }
+
+        .word-detail {
+            margin-top: 16px;
+            padding: 16px;
+            background: #FAF7F2;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #8B7355;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .word-detail.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-section {
+            background: #FFFDF9;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .quiz-question {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4A3F35;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 14px 18px;
+            background: #FAF7F2;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #4A3F35;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .quiz-option:active {
+            border-color: #7BA7BC;
+            background: #F0F7FA;
+        }
+
+        .quiz-option.selected {
+            border-color: #5B8A72;
+            background: #E9F5EC;
+        }
+
+        .quiz-result {
+            margin-top: 16px;
+            padding: 16px;
+            background: linear-gradient(135deg, #E9F5EC, #F0F7FA);
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .quiz-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-score {
+            font-size: 22px;
+            font-weight: 700;
+            color: #5B8A72;
+            margin-bottom: 8px;
+        }
+
+        .message-section {
+            background: #FFFDF9;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 2px solid #E8DFD0;
+            border-radius: 12px;
+            background: #FAF7F2;
+            color: #4A3F35;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+
+        .message-input:focus {
+            border-color: #7BA7BC;
+        }
+
+        .submit-msg-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #E07A5F, #D4654A);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-msg-btn:active {
+            transform: scale(0.97);
+        }
+
+        .message-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-item {
+            padding: 14px 16px;
+            background: #FAF7F2;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #8B7355;
+            line-height: 1.6;
+            border-left: 3px solid #7BA7BC;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #4A3F35;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .souvenir-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .souvenir-card {
+            background: linear-gradient(135deg, #FFFDF9, #F5F0E8);
+            border-radius: 20px;
+            padding: 32px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .souvenir-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4A3F35;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .souvenir-tag {
+            font-size: 15px;
+            color: #E07A5F;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .souvenir-meta {
+            font-size: 13px;
+            color: #8B7355;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .souvenir-stamp {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #E07A5F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #E07A5F;
+            transform: rotate(-15deg);
+            opacity: 0.6;
+        }
+
+        .generate-btn {
+            padding: 14px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #4A3F35;
+            background: #FFFDF9;
+            border: 2px solid #E8DFD0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn:active {
+            border-color: #7BA7BC;
+            background: #F0F7FA;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #D4C4A8;
+        }
+
+        .footer a {
+            color: #7BA7BC;
+            text-decoration: none;
+        }
+
+        .stranger-tag {
+            background: linear-gradient(135deg, #E8DFD0, #D4C4A8) !important;
+        }
+
+        .fade-in-up {
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        @media (max-width: 480px) {
+            .home-title { font-size: 24px; }
+            .tag-title { font-size: 22px; }
+            .page { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 首页 -->
+    <div class="page active" id="homePage">
+        <div class="home-container">
+            <div class="home-icon">🔐</div>
+            <h1 class="home-title">解锁你和沈立文的<br>大学四年</h1>
+            <p class="home-subtitle">输入你的名字，看看你们之间<br>有什么样的故事</p>
+            <div class="input-group">
+                <input type="text" class="name-input" id="nameInput" placeholder="请输入你的名字" maxlength="20">
+            </div>
+            <button class="unlock-btn" onclick="unlock()">✨ 解锁专属记忆</button>
+            <p class="hint-text">怀化学院 · 2019-2025</p>
+        </div>
+    </div>
+
+    <!-- 加载页 -->
+    <div class="page" id="loadingPage">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">正在检索记忆档案...</p>
+        </div>
+    </div>
+
+    <!-- 结果页 -->
+    <div class="page" id="resultPage">
+        <div class="result-container">
+            <div class="result-header">
+                <div class="result-badge" id="resultBadge">专属记忆</div>
+                <div class="result-name" id="resultName">张湘伟</div>
+                <div class="result-tagline" id="resultTagline">你们的故事，从查课开始</div>
+            </div>
+
+            <div class="tag-card fade-in-up delay-1">
+                <div class="tag-label">RELATIONSHIP TYPE</div>
+                <div class="tag-title" id="tagTitle">从查课名单到旅行清单</div>
+                <div class="tag-desc" id="tagDesc">
+                    你们从学生会的查课工作相识，从QQ好友到旅行搭子，从怀化到成都再到北海，课表之外，你们一起走过了更远的路。
+                </div>
+            </div>
+
+            <div class="fade-in-up delay-2">
+                <div class="section-title">
+                    <span class="section-icon">🏅</span>
+                    你们解锁的成就
+                </div>
+                <div class="achievements-grid" id="achievements"></div>
+            </div>
+
+            <div class="word-cloud fade-in-up delay-3">
+                <div class="section-title">
+                    <span class="section-icon">💬</span>
+                    你们的关系关键词
+                </div>
+                <div class="cloud-container" id="wordCloud"></div>
+                <div class="word-detail" id="wordDetail"></div>
+            </div>
+
+            <div class="quiz-section fade-in-up delay-4">
+                <div class="section-title">
+                    <span class="section-icon">🎯</span>
+                    默契测试
+                </div>
+                <div id="quizContainer"></div>
+            </div>
+
+            <div class="message-section fade-in-up delay-5">
+                <div class="section-title">
+                    <span class="section-icon">💌</span>
+                    给沈立文留句话
+                </div>
+                <textarea class="message-input" id="messageInput" rows="3" placeholder="写下你想对沈立文说的话，或一段你们之间的回忆..."></textarea>
+                <button class="submit-msg-btn" onclick="submitMessage()">投递留言</button>
+                <div class="message-list" id="messageList">
+                    <div class="message-item">
+                        <div class="message-author">系统</div>
+                        <div>这是你们共同的记忆空间，写下你想说的话吧～</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="souvenir-section fade-in-up delay-5">
+                <div class="souvenir-card" id="souvenirCard">
+                    <div class="souvenir-title">沈立文 × 张湘伟</div>
+                    <div class="souvenir-tag">从查课名单到旅行清单</div>
+                    <div class="souvenir-meta">
+                        相识于怀化学院学生会<br>
+                        一起看过成都的大熊猫<br>
+                        一起在北海的海风里骑行<br>
+                        2022 - 2025
+                    </div>
+                    <div class="souvenir-stamp">已认证</div>
+                </div>
+                <button class="generate-btn" onclick="generateSouvenir()">📸 生成纪念卡</button>
+            </div>
+
+            <div class="footer">
+                Made with 💙 by 沈立文 · 怀化学院<br>
+                <a href="#" onclick="location.reload()">再试一个名字</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const whitelist = {
+            '张湘伟': {
+                tag: '从查课名单到旅行清单',
+                desc: '你们从学生会的查课工作相识，从QQ好友到旅行搭子，从怀化到成都再到北海，课表之外，你们一起走过了更远的路。',
+                achievements: [
+                    {
+                        icon: '📋',
+                        title: '查课初识',
+                        desc: '2022年9月，学生会查课让你们第一次相遇。那时候他的头像还是黄色的辛普森。',
+                        date: '2022.09'
+                    },
+                    {
+                        icon: '🐼',
+                        title: '成都探险家',
+                        desc: '2024年国庆，一起从怀化奔赴成都。看了熊猫谷的大熊猫，在都江堰追逐蓝眼泪，差点赶不上车，还一起吃了四川火锅。',
+                        date: '2024.10'
+                    },
+                    {
+                        icon: '🌊',
+                        title: '北海追风者',
+                        desc: '2025年4月，和张朔语、赵弈钧一起去了北海。六点多骑车在海岛吹风，大海真的很漂亮。',
+                        date: '2025.04'
+                    }
+                ],
+                words: [
+                    { text: '查课', detail: '2022年9月，学生会的查课工作让你们加了QQ好友，那是你们故事的开始。' },
+                    { text: '辛普森', detail: '张湘伟当时的头像是黄色的辛普森，这个画面沈立文一直记得。' },
+                    { text: '成都', detail: '2024年国庆，你们一起从怀化前往成都旅行，那是第一次长途同行。' },
+                    { text: '熊猫谷', detail: '在成都，你们一起去看了熊猫谷的大熊猫，那是属于你们的治愈时刻。' },
+                    { text: '蓝眼泪', detail: '都江堰的"蓝眼泪"差点让你们赶不上车，但那个夜晚一定很难忘。' },
+                    { text: '火锅', detail: '四川火锅的辣，和你们友谊的热一样让人印象深刻。' },
+                    { text: '北海', detail: '2025年4月，你们和室友一起去了广西北海，海风里的骑行是青春的注脚。' },
+                    { text: '海风', detail: '六点多在海边骑车吹风，那是属于你们的自由时刻。' }
+                ],
+                quiz: [
+                    {
+                        question: '你们第一次见面是在什么场合？',
+                        options: ['军训', '学生会查课', '社团招新', '食堂'],
+                        correct: 1,
+                        explain: '2022年9月，学生会的查课工作让你们第一次相遇。'
+                    },
+                    {
+                        question: '张湘伟当时的QQ头像是什么？',
+                        options: ['默认头像', '黄色的辛普森', '动漫人物', '风景照'],
+                        correct: 1,
+                        explain: '沈立文记得很清楚，那时候张湘伟的头像是黄色的辛普森。'
+                    },
+                    {
+                        question: '你们一起去过的城市有哪些？',
+                        options: ['只有怀化', '怀化和成都', '怀化、成都和北海', '只有北海'],
+                        correct: 2,
+                        explain: '从怀化出发，你们一起去了成都和北海，未来也许还有更多地方。'
+                    }
+                ]
+            }
+        };
+
+        const strangerData = {
+            tags: [
+                '走廊里的点头之交',
+                '食堂窗口的排队邻居',
+                '图书馆的邻桌同学',
+                '操场上的擦肩跑者',
+                '毕业典礼的人海一员'
+            ],
+            achievements: [
+                {
+                    icon: '🏫',
+                    title: '校园同行者',
+                    desc: '你们曾在怀化学院的某个角落相遇，也许是走廊、食堂，或是图书馆的某张桌子。',
+                    date: '2019-2025'
+                },
+                {
+                    icon: '🍜',
+                    title: '食堂探索者',
+                    desc: '你们可能曾在同一个食堂窗口排队，点过相似的饭菜，只是未曾相识。',
+                    date: '某年某月'
+                },
+                {
+                    icon: '📚',
+                    title: '知识海洋漂流者',
+                    desc: '在图书馆的某个下午，你们可能坐在同一层，为不同的目标努力着。',
+                    date: '某年某月'
+                }
+            ],
+            words: [
+                { text: '怀化', detail: '这座小城承载了你们共同的大学记忆。' },
+                { text: '图书馆', detail: '也许你们曾在同一层楼自习，只是未曾交谈。' },
+                { text: '食堂', detail: '那些排队的日子，你们可能就在彼此身边。' },
+                { text: '操场', detail: '夜跑时的擦肩而过，也是青春的一部分。' },
+                { text: '期末', detail: '那些熬夜复习的日子，你们也许有着相似的焦虑。' },
+                { text: '毕业', detail: '无论是否相识，你们都是这段时光的见证者。' }
+            ],
+            quiz: [
+                {
+                    question: '你们可能是通过什么认识的？',
+                    options: ['同班同学', '社团活动', '偶然相遇', '尚未相识'],
+                    correct: 3,
+                    explain: '在这个故事里，你们可能是尚未相识的校园同行者。'
+                }
+            ]
+        };
+
+        let currentData = null;
+        let currentName = '';
+        let quizScore = 0;
+        let quizIndex = 0;
+
+        function unlock() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('请输入你的名字');
+                return;
+            }
+            currentName = name;
+
+            document.getElementById('homePage').classList.remove('active');
+            document.getElementById('loadingPage').classList.add('active');
+
+            setTimeout(() => {
+                document.getElementById('loadingPage').classList.remove('active');
+                document.getElementById('resultPage').classList.add('active');
+                
+                if (whitelist[name]) {
+                    currentData = whitelist[name];
+                    renderWhitelist(name);
+                } else {
+                    currentData = generateStrangerData(name);
+                    renderStranger(name);
+                }
+            }, 1500);
+        }
+
+        function generateStrangerData(name) {
+            const tag = strangerData.tags[Math.floor(Math.random() * strangerData.tags.length)];
+            return {
+                tag: tag,
+                desc: `在怀化学院的四年里，你们也许是${tag}。虽然故事不多，但你们共享了同一段青春时光。`,
+                achievements: strangerData.achievements,
+                words: strangerData.words,
+                quiz: strangerData.quiz
+            };
+        }
+
+        function renderWhitelist(name) {
+            document.getElementById('resultBadge').textContent = '专属记忆';
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultTagline').textContent = '你们的故事，从查课开始';
+            document.getElementById('tagTitle').textContent = currentData.tag;
+            document.getElementById('tagDesc').textContent = currentData.desc;
+            
+            document.querySelector('.souvenir-title').textContent = `沈立文 × ${name}`;
+            document.querySelector('.souvenir-tag').textContent = currentData.tag;
+            
+            renderAchievements(currentData.achievements);
+            renderWordCloud(currentData.words);
+            renderQuiz(currentData.quiz);
+        }
+
+        function renderStranger(name) {
+            document.getElementById('resultBadge').textContent = '校园记忆';
+            document.getElementById('resultBadge').classList.add('stranger-tag');
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultTagline').textContent = '你们共享了同一段青春';
+            document.getElementById('tagTitle').textContent = currentData.tag;
+            document.getElementById('tagDesc').textContent = currentData.desc;
+            
+            document.querySelector('.souvenir-title').textContent = `沈立文 × ${name}`;
+            document.querySelector('.souvenir-tag').textContent = currentData.tag;
+            document.querySelector('.souvenir-meta').innerHTML = 
+                '同在怀化学院求学<br>' +
+                '共享过同一片校园天空<br>' +
+                '也许曾在某个角落相遇<br>' +
+                '2019 - 2025';
+            
+            renderAchievements(currentData.achievements);
+            renderWordCloud(currentData.words);
+            renderQuiz(currentData.quiz);
+        }
+
+        function renderAchievements(achievements) {
+            const container = document.getElementById('achievements');
+            container.innerHTML = achievements.map(a => `
+                <div class="achievement-card" onclick="toggleAchievement(this)">
+                    <div class="achievement-icon">${a.icon}</div>
+                    <div class="achievement-content">
+                        <div class="achievement-title">${a.title}</div>
+                        <div class="achievement-desc">${a.desc}</div>
+                        <div class="achievement-date">${a.date}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleAchievement(card) {
+            card.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        function renderWordCloud(words) {
+            const container = document.getElementById('wordCloud');
+            container.innerHTML = words.map((w, i) => `
+                <span class="cloud-word" onclick="showWordDetail(${i})">${w.text}</span>
+            `).join('');
+        }
+
+        function showWordDetail(index) {
+            const words = document.querySelectorAll('.cloud-word');
+            words.forEach(w => w.classList.remove('active'));
+            words[index].classList.add('active');
+            
+            const detail = document.getElementById('wordDetail');
+            detail.textContent = currentData.words[index].detail;
+            detail.classList.add('show');
+        }
+
+        function renderQuiz(quizList) {
+            quizIndex = 0;
+            quizScore = 0;
+            showQuizQuestion(quizList[0]);
+        }
+
+        function showQuizQuestion(q) {
+            const container = document.getElementById('quizContainer');
+            if (!q) {
+                container.innerHTML = `
+                    <div class="quiz-result show">
+                        <div class="quiz-score">${quizScore} / ${currentData.quiz.length}</div>
+                        <div style="font-size: 14px; color: #8B7355;">
+                            ${quizScore === currentData.quiz.length ? '完美！你们真的很了解彼此 🎉' : 
+                              quizScore > 0 ? '还不错，有些记忆需要一起回味～' : '也许你们还需要多聊聊！'}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="quiz-question">${q.question}</div>
+                <div class="quiz-options">
+                    ${q.options.map((opt, i) => `
+                        <div class="quiz-option" onclick="selectOption(${i}, ${q.correct}, '${q.explain}')">${opt}</div>
+                    `).join('')}
+                </div>
+                <div class="quiz-result" id="quizResult"></div>
+            `;
+        }
+
+        function selectOption(selected, correct, explain) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((opt, i) => {
+                opt.style.pointerEvents = 'none';
+                if (i === correct) {
+                    opt.classList.add('correct');
+                }
+                if (i === selected && i !== correct) {
+                    opt.style.borderColor = '#E07A5F';
+                    opt.style.background = '#FDEDEC';
+                }
+            });
+
+            if (selected === correct) {
+                quizScore++;
+            }
+
+            const result = document.getElementById('quizResult');
+            result.innerHTML = `
+                <div style="font-weight: 600; color: #4A3F35; margin-bottom: 8px;">
+                    ${selected === correct ? '✅ 回答正确！' : '❌ 正确答案是第' + (correct + 1) + '个'}
+                </div>
+                <div style="font-size: 13px; color: #8B7355; margin-bottom: 12px;">${explain}</div>
+                <button onclick="nextQuiz()" style="padding: 10px 24px; background: #7BA7BC; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">下一题 →</button>
+            `;
+            result.classList.add('show');
+        }
+
+        function nextQuiz() {
+            quizIndex++;
+            showQuizQuestion(currentData.quiz[quizIndex]);
+        }
+
+        function submitMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (!text) {
+                alert('请输入留言内容');
+                return;
+            }
+
+            const list = document.getElementById('messageList');
+            const item = document.createElement('div');
+            item.className = 'message-item';
+            item.innerHTML = `
+                <div class="message-author">${currentName}</div>
+                <div>${text}</div>
+            `;
+            list.insertBefore(item, list.children[1]);
+            input.value = '';
+        }
+
+        function generateSouvenir() {
+            alert('📸 纪念卡已生成！\\n\\n长按上方卡片即可保存图片，\\n分享到朋友圈吧～');
+        }
+
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') unlock();
+        });
+    </script>
+</body>
+</html>
